@@ -3,10 +3,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
 
@@ -69,6 +72,11 @@
 
     <!-- Tracking web application support -->
 
+    <bean class="se.citerus.dddsample.interfaces.tracking.CargoTrackingController">
+        <property name="cargoRepository" ref="cargoRepository"/>
+        <property name="handlingEventRepository" ref="handlingEventRepository"/>
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -86,9 +94,12 @@
         <property name="defaultLocale" value="en"/>
     </bean>
 
-    <bean id="openSessionInViewInterceptor"
-          class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
+    <mvc:interceptors>
+        <bean id="openSessionInViewInterceptor" class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+            <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>
+    </mvc:interceptors>
+
+    <mvc:annotation-driven/>
 
 </beans>
