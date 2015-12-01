@@ -21,7 +21,7 @@
         </a>
       </li>
       <li>
-        <a href="${rc.contextPath}/admin/registrationForm.html">
+        <a href="${rc.contextPath}/admin/registration">
           Book new cargo
         </a>
       </li>
