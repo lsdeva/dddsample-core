@@ -3,33 +3,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <title>Cargo Administration</title>
-</head>
+<head th:replace="thymeleaf/adminDecorator :: adminhead('Cargo Administration')"/>
+
 <body>
-<table border="1" width="600">
-    <caption>All cargos</caption>
-    <thead>
-    <tr>
-        <td>Tracking ID</td>
-        <td>Origin</td>
-        <td>Destination</td>
-        <td>Routed</td>
-    </tr>
-    </thead>
-    <tbody>
-        <tr th:each="cargo : ${cargoList}">
-            <td>
-                <!--c:url value="/admin/show.html" var="showUrl">
-                    <c:param name="trackingId" value="${cargo.trackingId}"/>
-                </c:url-->
-                <a href="/admin/show.jsp" th:href="@{/admin/show(trackingId=${cargo.trackingId})}" th:text="${cargo.trackingId}">Tracking id</a>
-            </td>
-            <td th:text="${cargo.origin}">Origin</td>
-            <td th:text="${cargo.finalDestination}">Final destination</td>
-            <td>${cargo.misrouted ? "Misrouted" : (cargo.routed ? "Yes" : "No")}</td>
-        </tr>
-    </tbody>
-</table>
+<div id="outer">
+    <div th:replace="thymeleaf/adminDecorator :: adminbody"/>
+    <div id="body">
+        <table border="1" width="600">
+            <caption>All cargos</caption>
+            <thead>
+            <tr>
+                <td>Tracking ID</td>
+                <td>Origin</td>
+                <td>Destination</td>
+                <td>Routed</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cargo : ${cargoList}">
+                <td>
+                    <a href="/admin/show.jsp" th:href="@{/admin/show(trackingId=${cargo.trackingId})}"
+                       th:text="${cargo.trackingId}">Tracking id</a>
+                </td>
+                <td th:text="${cargo.origin}">Origin</td>
+                <td th:text="${cargo.finalDestination}">Final destination</td>
+                <td th:text="(${cargo.misrouted} ? 'Misrouted' : '') + (${cargo.routed} ? 'Yes' : 'No')"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
