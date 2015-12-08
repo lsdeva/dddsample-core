@@ -2,6 +2,7 @@ package se.citerus.dddsample.interfaces.booking.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import se.citerus.dddsample.interfaces.booking.facade.BookingServiceFacade;
 import se.citerus.dddsample.interfaces.booking.facade.dto.CargoRoutingDTO;
@@ -49,9 +50,10 @@ public final class CargoAdminController extends MultiActionController {
 
         model.put("unlocodes", unLocodeStrings);
         model.put("locations", dtoList);
-        return "jsp/admin/registrationForm";
+        return "thymeleaf/admin/registrationForm";
     }
 
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public void register(HttpServletRequest request, HttpServletResponse response,
                          RegistrationCommand command) throws Exception {
         Date arrivalDeadline = new SimpleDateFormat("M/dd/yyyy").parse(command.getArrivalDeadline());
@@ -74,20 +76,20 @@ public final class CargoAdminController extends MultiActionController {
         String trackingId = request.getParameter("trackingId");
         CargoRoutingDTO dto = bookingServiceFacade.loadCargoForRouting(trackingId);
         model.put("cargo", dto);
-        return "jsp/admin/show";
+        return "thymeleaf/admin/show";
     }
 
-    public Map selectItinerary(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+    @RequestMapping("/selectItinerary")
+    public String selectItinerary(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model) throws Exception {
         String trackingId = request.getParameter("trackingId");
 
         List<RouteCandidateDTO> routeCandidates = bookingServiceFacade.requestPossibleRoutesForCargo(trackingId);
-        map.put("routeCandidates", routeCandidates);
+        model.put("routeCandidates", routeCandidates);
 
         CargoRoutingDTO cargoDTO = bookingServiceFacade.loadCargoForRouting(trackingId);
-        map.put("cargo", cargoDTO);
+        model.put("cargo", cargoDTO);
 
-        return map;
+        return "jsp/admin/selectItinerary";
     }
 
     public void assignItinerary(HttpServletRequest request, HttpServletResponse response, RouteAssignmentCommand command) throws Exception {
@@ -110,17 +112,16 @@ public final class CargoAdminController extends MultiActionController {
         //response.sendRedirect("list.html");
     }
 
-    public Map pickNewDestination(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-
+    @RequestMapping("/pickNewDestination")
+    public String pickNewDestination(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model) throws Exception {
         List<LocationDTO> locations = bookingServiceFacade.listShippingLocations();
-        map.put("locations", locations);
+        model.put("locations", locations);
 
         String trackingId = request.getParameter("trackingId");
         CargoRoutingDTO cargo = bookingServiceFacade.loadCargoForRouting(trackingId);
-        map.put("cargo", cargo);
+        model.put("cargo", cargo);
 
-        return map;
+        return "jsp/admin/pickNewDestination";
     }
 
     public void changeDestination(HttpServletRequest request, HttpServletResponse response) throws Exception {
