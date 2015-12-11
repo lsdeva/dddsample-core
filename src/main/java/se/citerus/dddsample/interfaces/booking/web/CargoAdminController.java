@@ -1,9 +1,11 @@
 package se.citerus.dddsample.interfaces.booking.web;
 
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import se.citerus.dddsample.interfaces.booking.facade.BookingServiceFacade;
 import se.citerus.dddsample.interfaces.booking.facade.dto.CargoRoutingDTO;
 import se.citerus.dddsample.interfaces.booking.facade.dto.LegDTO;
@@ -13,13 +15,16 @@ import se.citerus.dddsample.interfaces.booking.facade.dto.RouteCandidateDTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Handles cargo booking and routing. Operates against a dedicated remoting service facade,
  * and could easily be rewritten as a thick Swing client. Completely separated from the domain layer,
  * unlike the tracking user interface.
- * <p/>
+ * <p>
  * In order to successfully keep the domain model shielded from user interface considerations,
  * this approach is generally preferred to the one taken in the tracking controller. However,
  * there is never any one perfect solution for all situations, so we've chosen to demonstrate
@@ -28,18 +33,17 @@ import java.util.*;
  * @see se.citerus.dddsample.interfaces.tracking.CargoTrackingController
  */
 @Controller
-public final class CargoAdminController extends MultiActionController {
+public final class CargoAdminController {
 
     private BookingServiceFacade bookingServiceFacade;
 
-  /*@Override
-  protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
-    super.initBinder(request, binder);
-    binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm"), false));
-  }*/
+    @InitBinder
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm"), false));
+    }
 
     @RequestMapping("/registration")
-    public String registrationForm(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model) throws Exception {
+    public String registration(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model) throws Exception {
         List<LocationDTO> dtoList = bookingServiceFacade.listShippingLocations();
 
         List<String> unLocodeStrings = new ArrayList<String>();
@@ -53,7 +57,7 @@ public final class CargoAdminController extends MultiActionController {
         return "thymeleaf/admin/registrationForm";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public void register(HttpServletRequest request, HttpServletResponse response,
                          RegistrationCommand command) throws Exception {
         Date arrivalDeadline = new SimpleDateFormat("M/dd/yyyy").parse(command.getArrivalDeadline());
@@ -89,9 +93,10 @@ public final class CargoAdminController extends MultiActionController {
         CargoRoutingDTO cargoDTO = bookingServiceFacade.loadCargoForRouting(trackingId);
         model.put("cargo", cargoDTO);
 
-        return "jsp/admin/selectItinerary";
+        return "thymeleaf/admin/selectItinerary";
     }
 
+    @RequestMapping(value = "/assignItinerary", method = RequestMethod.POST)
     public void assignItinerary(HttpServletRequest request, HttpServletResponse response, RouteAssignmentCommand command) throws Exception {
         List<LegDTO> legDTOs = new ArrayList<LegDTO>(command.getLegs().size());
         for (RouteAssignmentCommand.LegCommand leg : command.getLegs()) {

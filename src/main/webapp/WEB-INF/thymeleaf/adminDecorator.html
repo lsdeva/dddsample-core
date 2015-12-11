@@ -3,12 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
-<head th:fragment="adminhead (title)">
-    <title th:text="${title}">Title</title>
-    <!--script type="text/javascript" charset="UTF-8"></script-->
-    <link rel="stylesheet" type="text/css" th:href="@{/admin.css}"/>
-</head>
-
 <body>
 <th:block th:fragment="adminbody">
     <img id="logotype" th:src="@{/images/dddsample_logotype_small.png}" alt=""/>
