@@ -117,7 +117,7 @@ public final class CargoAdminController {
         //response.sendRedirect("list.html");
     }
 
-    @RequestMapping("/pickNewDestination")
+    @RequestMapping(value = "/pickNewDestination")
     public String pickNewDestination(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model) throws Exception {
         List<LocationDTO> locations = bookingServiceFacade.listShippingLocations();
         model.put("locations", locations);
@@ -126,9 +126,10 @@ public final class CargoAdminController {
         CargoRoutingDTO cargo = bookingServiceFacade.loadCargoForRouting(trackingId);
         model.put("cargo", cargo);
 
-        return "jsp/admin/pickNewDestination";
+        return "thymeleaf/admin/pickNewDestination";
     }
 
+    @RequestMapping(value = "/changeDestination", method = RequestMethod.POST)
     public void changeDestination(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String trackingId = request.getParameter("trackingId");
         String unLocode = request.getParameter("unlocode");
