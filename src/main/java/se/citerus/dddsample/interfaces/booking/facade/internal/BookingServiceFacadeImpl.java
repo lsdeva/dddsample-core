@@ -91,9 +91,8 @@ public class BookingServiceFacadeImpl implements BookingServiceFacade {
 
     final List<RouteCandidateDTO> routeCandidates = new ArrayList<RouteCandidateDTO>(itineraries.size());
     final ItineraryCandidateDTOAssembler dtoAssembler = new ItineraryCandidateDTOAssembler();
-    for (Itinerary itinerary : itineraries) {
-      routeCandidates.add(dtoAssembler.toDTO(itinerary));
-    }
+    
+    itineraries.forEach(itinerary -> routeCandidates.add(dtoAssembler.toDTO(itinerary)));
 
     return routeCandidates;
   }
