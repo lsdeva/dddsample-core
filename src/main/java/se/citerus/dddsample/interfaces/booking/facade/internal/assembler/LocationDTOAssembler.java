@@ -14,9 +14,8 @@ public class LocationDTOAssembler {
 
   public List<LocationDTO> toDTOList(List<Location> allLocations) {
     final List<LocationDTO> dtoList = new ArrayList<LocationDTO>(allLocations.size());
-    for (Location location : allLocations) {
-      dtoList.add(toDTO(location));
-    }
+    
+    allLocations.forEach(location -> dtoList.add(toDTO(location)));
     return dtoList;
   }
 }
