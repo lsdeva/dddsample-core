@@ -80,9 +80,8 @@ public class BookingServiceFacadeImpl implements BookingServiceFacade {
     final List<Cargo> cargoList = cargoRepository.findAll();
     final List<CargoRoutingDTO> dtoList = new ArrayList<CargoRoutingDTO>(cargoList.size());
     final CargoRoutingDTOAssembler assembler = new CargoRoutingDTOAssembler();
-    for (Cargo cargo : cargoList) {
-      dtoList.add(assembler.toDTO(cargo));
-    }
+  
+    cargoList.forEach(cargo -> dtoList.add(assembler.toDTO(cargo)));
     return dtoList;
   }
 
