@@ -12,7 +12,12 @@ import static java.util.Collections.sort;
  */
 public class HandlingHistory implements ValueObject<HandlingHistory> {
 
-    private final List<HandlingEvent> handlingEvents;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private final List<HandlingEvent> handlingEvents;
 
     public static final HandlingHistory EMPTY = new HandlingHistory(Collections.<HandlingEvent>emptyList());
 
