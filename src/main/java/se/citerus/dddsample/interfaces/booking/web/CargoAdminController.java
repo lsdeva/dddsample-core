@@ -42,9 +42,7 @@ public final class CargoAdminController extends MultiActionController {
 
     List<String> unLocodeStrings = new ArrayList<String>();
 
-    for (LocationDTO dto : dtoList) {
-      unLocodeStrings.add(dto.getUnLocode());
-    }
+    dtoList.forEach(dto -> unLocodeStrings.add(dto.getUnLocode()));
 
     map.put("unlocodes", unLocodeStrings);
     map.put("locations", dtoList);
