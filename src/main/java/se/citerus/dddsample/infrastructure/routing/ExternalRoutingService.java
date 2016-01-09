@@ -53,7 +53,7 @@ public class ExternalRoutingService implements RoutingService {
     );
     } catch (RemoteException e) {
       log.error(e, e);
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
 
     /*
